@@ -1,13 +1,27 @@
-from django.apps import AppConfig
+# Configuración de la aplicación de presentación
+from fastapi import FastAPI
+from presentation.urls import api_router
 
-class PresentationConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'presentation'
-    verbose_name = 'Capa de Presentación'
+def create_app() -> FastAPI:
+    """
+    Factory function para crear la aplicación FastAPI
     
-    def ready(self):
-        try:
-            import presentation.urls
-        except ImportError:
-            pass
+    Returns:
+        FastAPI: Instancia configurada de la aplicación
+    """
+    app = FastAPI(
+        title="Sistema de Pedidos - Presentation Layer",
+        description="API REST para gestión de pedidos usando arquitectura hexagonal",
+        version="1.0.0",
+        docs_url="/docs",
+        redoc_url="/redoc"
+    )
+    
+    # Incluir todas las rutas definidas
+    app.include_router(api_router)
+    
+    return app
+
+# Instancia de la aplicación para ser importada
+app = create_app()
 
