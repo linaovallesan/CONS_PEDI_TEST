@@ -23,12 +23,12 @@ async def actualiza_pedidos(
 ):
     try:
         input_dto = PedidoInputDTO(id_pedido=id_pedido)
-        result = service.actualizar_pedido(input_dto)  # Assuming 'actualizar_pedido' correctly represents the method to update an order (and not specifically 'close' an order as initially named) 
         
-        return result
-        
+        return service.actualizar_pedido_a_cerrado(input_dto)
+    
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
+    
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error interno: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 

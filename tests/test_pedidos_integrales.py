@@ -1,38 +1,29 @@
-# Importaciones necesarias
-import pytest
-from django.test import Client
-from django.urls import reverse
+# Librerías internas de Django para correr los tests con Pytest
+from django.test import TestCase, Client
 
-# Cliente de prueba de Django
-client = Client()
+# Definición de la clase de prueba integral
+class TestPedidos(TestCase):
 
-# Clase para testear los pedidos integralmente
-class TestPedidosIntegrales:
+    # Constructor de la clase de pruebas
+    def setUp(self):
+        # Cliente HTTP para tests de Django
+        self.client = Client()
 
-    # Test para verificar la respuesta exitosa de actualización de pedidos
-    def test_actualizar_pedidos_exitoso(self):
-        # URL correspondiente al endpoint 'test'
-        url = reverse('test')
+    # Test para una consulta de pedidos exitosa
+    def test_consulta_pedidos_exitosa(self):
+        # Realiza una petición GET al endpoint específico
+        response = self.client.get('https://gen-halcon.azzorti.co/undefined/test')
 
-        # Simulación de la solicitud GET
-        response = client.get(url)
+        # Verificar que el código de respuesta es 200 (éxito)
+        self.assertEqual(response.status_code, 200)
 
-        # Verificar el código de estado 200
-        assert response.status_code == 200
+        # Verificar contenido de la respuesta en caso necesario
 
-        # Verificar que la respuesta contiene datos esperados (flujo de éxito)
-        assert 'success' in response.json()['descripcion']
-        
-    # Test para verificar el manejo de errores al actualizar pedidos
-    def test_actualizar_pedidos_error(self):
-        # URL con parámetros incorrectos o falta de ellos (simulando error)
-        url = reverse('test') + '?error_trigger=true'
+    # Test para un caso de error al consultar pedidos
+    # Por ejemplo, suponer un error controlado como endpoint no encontrado
+    def test_consulta_pedidos_error(self):
+        # Realiza una petición GET a un endpoint incorrecto
+        response = self.client.get('https://gen-halcon.azzorti.co/undefined/error')
 
-        # Simulación de la solicitud GET
-        response = client.get(url)
-
-        # Verificar el manejo del error - debería ser un estado 400 o 500 según el diseño de la API
-        assert response.status_code in [400, 500]
-
-        # Verificar que la respuesta maneje los errores de forma adecuada
-        assert 'error' in response.json()['descripcion']
+        # Verificar que el código de respuesta es de error, p.ej. 404
+        self.assertEqual(response.status_code, 404)

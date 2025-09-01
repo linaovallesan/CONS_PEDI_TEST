@@ -1,20 +1,13 @@
-from fastapi import FastAPI
-from presentation.urls import main_router
+from django.apps import AppConfig
 
-def create_app() -> FastAPI:
-    app = FastAPI(
-        title="API de Pedidos - Arquitectura Hexagonal",
-        description="API para gestión de pedidos usando arquitectura hexagonal",
-        version="1.0.0"
-    )
+class PresentationConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'presentation'
+    verbose_name = 'Capa de Presentación'
     
-    app.include_router(main_router)
-    
-    @app.get("/health")
-    async def health_check():
-        return {"status": "healthy", "service": "pedidos"}
-    
-    return app
-
-app = create_app()
+    def ready(self):
+        try:
+            import presentation.urls
+        except ImportError:
+            pass
 
