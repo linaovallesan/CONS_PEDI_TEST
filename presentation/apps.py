@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from presentation.urls import main_router
 
-
 def create_app() -> FastAPI:
     app = FastAPI(
         title="API de Pedidos - Arquitectura Hexagonal",
@@ -11,9 +10,11 @@ def create_app() -> FastAPI:
     
     app.include_router(main_router)
     
+    @app.get("/health")
+    async def health_check():
+        return {"status": "healthy", "service": "pedidos"}
+    
     return app
 
-
 app = create_app()
-
 
