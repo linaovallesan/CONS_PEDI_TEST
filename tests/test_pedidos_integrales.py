@@ -1,29 +1,29 @@
-# Librerías internas de Django para correr los tests con Pytest
-from django.test import TestCase, Client
+import pytest
+import requests
 
-# Definición de la clase de prueba integral
-class TestPedidos(TestCase):
+# URL base para las pruebas de integración
+BASE_URL = "https://gen-halcon.azzorti.co/undefined"
 
-    # Constructor de la clase de pruebas
-    def setUp(self):
-        # Cliente HTTP para tests de Django
-        self.client = Client()
+# Test integral para verificar la funcionalidad de consultar pedidos exitosamente
+def test_consultar_pedidos_exitoso():
+    # Se hace una petición GET al endpoint correspondiente
+    response = requests.get(f"{BASE_URL}/cons_pedi/")
+    
+    # Verificación de que la respuesta tiene un código de estado 200
+    assert response.status_code == 200
+    
+    # Opcionalmente, verificar elementos específicos del contenido de la respuesta
+    # Esto depende de lo que deba contener la respuesta en un caso exitoso
+    # Por ejemplo: assert 'detalles_pedido' in response.json()
 
-    # Test para una consulta de pedidos exitosa
-    def test_consulta_pedidos_exitosa(self):
-        # Realiza una petición GET al endpoint específico
-        response = self.client.get('https://gen-halcon.azzorti.co/undefined/test')
-
-        # Verificar que el código de respuesta es 200 (éxito)
-        self.assertEqual(response.status_code, 200)
-
-        # Verificar contenido de la respuesta en caso necesario
-
-    # Test para un caso de error al consultar pedidos
-    # Por ejemplo, suponer un error controlado como endpoint no encontrado
-    def test_consulta_pedidos_error(self):
-        # Realiza una petición GET a un endpoint incorrecto
-        response = self.client.get('https://gen-halcon.azzorti.co/undefined/error')
-
-        # Verificar que el código de respuesta es de error, p.ej. 404
-        self.assertEqual(response.status_code, 404)
+# Test integral para verificar la manipulación de errores al consultar pedidos
+def test_consultar_pedidos_error():
+    # Simulación de entrada errónea o condición que lleva a un error
+    # En este ejemplo, se utilizará una URL incorrecta (simulando un error en el endpoint)
+    response = requests.get(f"{BASE_URL}/cons_pedi_incorrecto/")
+    
+    # Verificación de que la respuesta tiene un código de estado 400 (malformed request)
+    assert response.status_code == 400
+    
+    # Verificación de la respuesta de error adecuada
+    # Por ejemplo: assert 'error' in response.json()
