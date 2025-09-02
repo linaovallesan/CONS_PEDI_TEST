@@ -1,29 +1,24 @@
+
 import pytest
 import requests
 
-# URL base para las pruebas de integración
+# URL base para las solicitudes a la API
 BASE_URL = "https://gen-halcon.azzorti.co/undefined"
 
-# Test integral para verificar la funcionalidad de consultar pedidos exitosamente
-def test_consultar_pedidos_exitoso():
-    # Se hace una petición GET al endpoint correspondiente
-    response = requests.get(f"{BASE_URL}/cons_pedi/")
+# Pruebas integrales para el endpoint de pedidos
+class TestPedidosAPI:
     
-    # Verificación de que la respuesta tiene un código de estado 200
-    assert response.status_code == 200
+    # Test de éxitos al obtener pedidos
+    def test_consulta_pedidos_exito(self):
+        response = requests.get(f"{BASE_URL}/cons_pedi/")
+        assert response.status_code == 200
+        assert type(response.json()) is list  # Asumiendo que la API devuelve una lista de pedidos
     
-    # Opcionalmente, verificar elementos específicos del contenido de la respuesta
-    # Esto depende de lo que deba contener la respuesta en un caso exitoso
-    # Por ejemplo: assert 'detalles_pedido' in response.json()
+    # Test de manejo de error al obtener errores en las solicitudes de pedidos
+    def test_consulta_pedidos_error(self):
+        # Modificar el endpoint para simular un error como 404 o 400
+        response = requests.get(f"{BASE_URL}/cons_pedi_error/")
+        assert response.status_code == 400
+        assert "error" in response.text
 
-# Test integral para verificar la manipulación de errores al consultar pedidos
-def test_consultar_pedidos_error():
-    # Simulación de entrada errónea o condición que lleva a un error
-    # En este ejemplo, se utilizará una URL incorrecta (simulando un error en el endpoint)
-    response = requests.get(f"{BASE_URL}/cons_pedi_incorrecto/")
-    
-    # Verificación de que la respuesta tiene un código de estado 400 (malformed request)
-    assert response.status_code == 400
-    
-    # Verificación de la respuesta de error adecuada
-    # Por ejemplo: assert 'error' in response.json()
+# La estructura propuesta se basa en realizar llamadas directas al servidor utilizando el framework de testing pytest, comprobando tanto los escenarios exitosos como los de error. Se utiliza la biblioteca `requests` para realizar llamadas HTTP.
